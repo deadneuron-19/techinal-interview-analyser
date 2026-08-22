@@ -8,6 +8,10 @@ class Settings(BaseSettings):
     backend_url: str = "http://localhost:8000"
     frontend_url: str = "http://localhost:5173"
 
+    database_url: str = (
+        "postgresql+psycopg://postgres:postgres@localhost:5432/interview_analyser"
+    )
+
     model_config = SettingsConfigDict(
         env_file=".env",
         env_file_encoding="utf-8",

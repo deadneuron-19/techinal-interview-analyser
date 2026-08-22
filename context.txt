@@ -1,0 +1,478 @@
+# Project Context
+
+## What this project is
+
+**Technical Interview Reasoning Analyzer** — a tool that analyzes technical interview interactions and eventually evaluates reasoning quality, evidence, and interview performance.
+
+The project is being built incrementally. The current focus is establishing the frontend and backend foundation before implementing the actual analysis engines.
+
+---
+
+## Tech Stack
+
+### Backend
+
+* Python
+* FastAPI
+* Uvicorn
+* Pydantic Settings
+* SQLAlchemy
+* psycopg
+* Alembic
+* PostgreSQL
+* Ruff
+
+### Frontend
+
+* React
+* TypeScript
+* Vite
+* React Router
+
+### Current infrastructure
+
+* Backend: `http://127.0.0.1:8000`
+* Frontend: `http://localhost:5173`
+* Backend Python virtual environment: `backend/venv/`
+
+---
+
+## Current folder structure
+
+```text
+technical-interview-analyser/
+│
+├── backend/
+│   ├── alembic/
+│   │   ├── env.py
+│   │   ├── script.py.mako
+│   │   └── versions/
+│   │       └── 0001_create_interviews.py
+│   ├── alembic.ini
+│   ├── .env
+│   ├── app/
+│   │   ├── __init__.py
+│   │   ├── main.py
+│   │   │
+│   │   ├── api/
+│   │   │   ├── __init__.py
+│   │   │   ├── router.py
+│   │   │   └── routes/
+│   │   │       ├── __init__.py
+│   │   │       ├── health.py
+│   │   │       └── interviews.py
+│   │   │
+│   │   ├── core/
+│   │   │   ├── __init__.py
+│   │   │   ├── config.py
+│   │   │   └── errors.py
+│   │   │
+│   │   ├── db/
+│   │   │   ├── __init__.py
+│   │   │   ├── base.py
+│   │   │   └── session.py
+│   │   │
+│   │   ├── models/
+│   │   │   ├── __init__.py
+│   │   │   └── interview.py
+│   │   │
+│   │   ├── schemas/
+│   │   │   ├── __init__.py
+│   │   │   └── interview.py
+│   │   │
+│   │   ├── repositories/
+│   │   │   ├── __init__.py
+│   │   │   └── interview.py
+│   │   │
+│   │   └── services/
+│   │       ├── __init__.py
+│   │       └── interview.py
+│   │
+│   ├── requirements.txt
+│   └── venv/
+│
+├── frontend/
+│   ├── .env
+│   ├── public/
+│   ├── src/
+│   │   ├── components/
+│   │   │   └── BackendStatus.tsx
+│   │   ├── layouts/
+│   │   │   └── MainLayout.tsx
+│   │   ├── pages/
+│   │   │   └── Dashboard.tsx
+│   │   ├── services/
+│   │   │   └── api.ts
+│   │   ├── types/
+│   │   ├── App.tsx
+│   │   ├── index.css
+│   │   └── main.tsx
+│   ├── package.json
+│   └── package-lock.json
+│
+├── .env.example
+├── .gitignore
+├── README.md
+└── PROJECT_CONTEXT.md
+```
+
+---
+
+## What's done so far
+
+### Step 1 — Initial project setup
+
+* [x] Project/repository created
+* [x] Backend folder created
+* [x] Backend Python virtual environment created at `backend/venv/`
+* [x] FastAPI and Uvicorn installed
+* [x] React + TypeScript frontend created with Vite
+* [x] `.gitignore` created
+* [x] `.env.example` created
+* [x] README created
+* [x] Git initialized
+* [x] Initial project structure committed
+
+### Step 2 — FastAPI backend foundation
+
+* [x] Modular FastAPI application structure created
+* [x] `app/main.py` created as application entry point
+* [x] API router created
+* [x] Health route created
+* [x] `/health` endpoint works
+* [x] `/docs` Swagger documentation works
+* [x] Configuration management added with Pydantic Settings
+* [x] Backend `.env` configuration added
+* [x] CORS configured for React frontend
+* [x] Global exception handler added
+* [x] `services/` structure created for future backend logic
+* [x] `pydantic-settings` installed
+* [x] Ruff installed and configured/used for linting and formatting
+* [x] Backend successfully runs with Uvicorn
+* [x] Backend foundation committed and pushed to GitHub
+
+### Step 3 — React + TypeScript frontend foundation
+
+* [x] React Router installed
+* [x] Frontend folder structure created
+* [x] Reusable `components/` structure created
+* [x] `layouts/` structure created
+* [x] `pages/` structure created
+* [x] `services/` structure created
+* [x] `types/` structure created
+* [x] `MainLayout` created
+* [x] Dashboard page created
+* [x] API service created
+* [x] Backend health connection created
+* [x] `BackendStatus` component created
+* [x] React Router configured
+* [x] Frontend `.env` created with backend API URL
+* [x] Default Vite assets removed
+* [x] Frontend can communicate with FastAPI `/health`
+* [x] Frontend foundation committed/pushed after completion
+
+### Step 4 — Interview/session persistence
+
+* [x] PostgreSQL support added with SQLAlchemy and psycopg
+* [x] `DATABASE_URL` added to Pydantic Settings / `.env`
+* [x] SQLAlchemy engine, session dependency, and shared `Base` added
+* [x] `Interview` model and `InterviewStatus` enum added
+* [x] Interview request/response schemas added
+* [x] Interview repository and service layers added
+* [x] Interview REST endpoints added under `/api/v1/interviews`
+* [x] Lifecycle enforced: `CREATED` -> `IN_PROGRESS` -> `COMPLETED`
+* [x] Alembic configured; tables are created by migrations, not app startup
+* [x] Initial `interviews` table migration added
+
+---
+
+## Current application flow
+
+```text
+React + TypeScript
+       │
+       ▼
+React Router
+       │
+       ▼
+MainLayout
+       │
+       ▼
+Dashboard
+       │
+       ▼
+BackendStatus
+       │
+       ▼
+services/api.ts
+       │
+       │ GET /health
+       ▼
+FastAPI
+       │
+       ├── Health Router
+       │     └── {"status": "healthy"}
+       │
+       └── Interview Router
+             └── PostgreSQL (interviews table)
+```
+
+---
+
+## Current backend architecture
+
+```text
+app/
+│
+├── main.py
+│     └── FastAPI application entry point
+│
+├── api/
+│   ├── router.py
+│   │     └── central API router
+│   │
+│   └── routes/
+│       ├── health.py
+│       │     └── health endpoint
+│       └── interviews.py
+│             └── interview session endpoints
+│
+├── core/
+│   ├── config.py
+│   │     └── application configuration
+│   │
+│   └── errors.py
+│         └── global exception handling
+│
+├── db/
+│   ├── base.py
+│   │     └── shared SQLAlchemy Base
+│   └── session.py
+│         └── engine, session factory, get_db dependency
+│
+├── models/
+│     └── Interview ORM model and InterviewStatus enum
+│
+├── schemas/
+│     └── interview request/response Pydantic schemas
+│
+├── repositories/
+│     └── Interview database access
+│
+└── services/
+      └── interview business logic and lifecycle
+```
+
+Future backend functionality will eventually include areas such as:
+
+* Speech processing
+* Code analysis
+* Interview event processing
+* Evidence extraction
+* Reasoning analysis
+* Reporting
+
+These have **not been implemented yet**.
+
+---
+
+## Current frontend architecture
+
+```text
+src/
+│
+├── components/
+│     └── reusable UI components
+│
+├── layouts/
+│     └── application layouts
+│
+├── pages/
+│     └── application screens
+│
+├── services/
+│     └── backend/API communication
+│
+├── types/
+│     └── shared TypeScript types
+│
+├── App.tsx
+│     └── routing
+│
+├── main.tsx
+│     └── React application entry point
+│
+└── index.css
+      └── global styles
+```
+
+---
+
+## What's next
+
+The next steps should add **actual product functionality** rather than creating unnecessary infrastructure.
+
+Future areas may include:
+
+* [ ] Define interview/session data flow
+* [x] Add database layer
+* [x] Create interview/session models
+* [x] Create interview API routes
+* [x] Build interview session creation
+* [ ] Add event processing
+* [ ] Add speech/transcript processing
+* [ ] Add code analysis
+* [ ] Build evidence extraction
+* [ ] Build reasoning analysis
+* [ ] Add LLM integration
+* [ ] Generate interview reports
+* [ ] Build final dashboard/UI
+* [ ] Add authentication if required
+* [ ] Add testing
+* [ ] Deploy application
+
+The exact order should be decided based on the actual implementation requirements of each feature.
+
+---
+
+## Important decisions
+
+* Backend and frontend are separate applications.
+* Backend uses FastAPI.
+* Frontend uses React + TypeScript + Vite.
+* React Router is used for frontend routing.
+* Backend API communication is centralized in `frontend/src/services/`.
+* Backend configuration is centralized in `backend/app/core/config.py`.
+* Backend API routes are separated from `main.py`.
+* Ruff is used for Python linting and formatting.
+* The Python virtual environment for the backend is specifically `backend/venv/`.
+* Frontend does not use the Python virtual environment.
+* We are intentionally avoiding premature infrastructure and only adding technologies when the project needs them.
+* PostgreSQL is the database for interview/session persistence.
+* Database access lives in `repositories/`; business logic lives in `services/`.
+* Alembic is used for schema changes; the app does not call `create_all()` on startup.
+* Final UI design has not been implemented yet.
+* Speech analysis, code analysis, LLM integration, evidence, and reporting are not implemented yet.
+* Database tables are created with Alembic migrations, not application startup.
+* Interview lifecycle is `CREATED` -> `IN_PROGRESS` -> `COMPLETED`. Invalid transitions return HTTP 409.
+* Default PostgreSQL database name is `interview_analyser`.
+* Alembic must be run from the `backend/` directory.
+
+---
+
+## Environment variables
+
+### Backend
+
+`backend/.env` currently contains:
+
+```env
+APP_NAME=Technical Interview Reasoning Analyzer
+ENVIRONMENT=development
+BACKEND_URL=http://127.0.0.1:8000
+FRONTEND_URL=http://localhost:5173
+DATABASE_URL=postgresql+psycopg://postgres:postgres@localhost:5432/interview_analyser
+```
+
+### Frontend
+
+`frontend/.env` currently contains:
+
+```env
+VITE_API_BASE_URL=http://127.0.0.1:8000
+```
+
+`.env` files must not be committed to GitHub.
+
+---
+
+## Important gotchas
+
+* Use `backend/venv/` for the Python backend environment.
+* Do not create another Python virtual environment unless there is a specific reason.
+* When working on React, the Python venv is irrelevant.
+* Backend runs on port `8000`.
+* Frontend runs on port `5173`.
+* FastAPI root `/` currently returns `404`; this is expected because the implemented endpoint is `/health`.
+* FastAPI health endpoint: `http://127.0.0.1:8000/health`
+* FastAPI documentation: `http://127.0.0.1:8000/docs`
+* Interview API base path: `http://127.0.0.1:8000/api/v1/interviews`
+* PostgreSQL must be running before interview endpoints or Alembic migrations will work.
+* Create the `interview_analyser` database before running migrations.
+* Run Alembic from `backend/`: `alembic upgrade head`
+* Do not push `.env` files to GitHub.
+* Do not rename existing project folders/files without updating this document.
+* Do not introduce duplicate folder names such as another `backend`, `frontend`, or another virtual environment.
+* Before adding a new library/framework, check whether it is actually required by the next feature.
+
+---
+
+## Development workflow
+
+For backend:
+
+```powershell
+cd backend
+.\venv\Scripts\Activate.ps1
+python -m uvicorn app.main:app --host 127.0.0.1 --port 8000
+```
+
+For database migrations:
+
+```powershell
+cd backend
+.\venv\Scripts\Activate.ps1
+alembic upgrade head
+```
+
+For backend code quality:
+
+```powershell
+ruff format .
+ruff check . --fix
+ruff check .
+```
+
+For frontend:
+
+```powershell
+cd frontend
+npm run dev
+```
+
+For frontend production build:
+
+```powershell
+npm run build
+```
+
+After completing a meaningful project step:
+
+```powershell
+git add .
+git commit -m "Description of completed step"
+git push
+```
+
+---
+
+## Instructions for future AI sessions
+
+When continuing this project:
+
+1. Read this `PROJECT_CONTEXT.md` first.
+2. Treat the existing architecture and names as authoritative.
+3. Do not recreate or rename existing files unnecessarily.
+4. Do not assume technologies have been implemented unless they are marked as completed here.
+5. Before writing code, understand how the new feature fits into the existing architecture.
+6. Keep the implementation modular but avoid unnecessary abstraction.
+7. When a step is completed, update this document with:
+
+   * What was added
+   * New files/folders
+   * Important architectural decisions
+   * New dependencies
+   * New environment variables
+   * New gotchas
+   * What should be built next
+8. Keep the project runnable after every major step.
